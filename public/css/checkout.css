@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    font-family: 'Poppins', sans-serif;
+    text-transform: capitalize;
+    transition: all 0.2s linear;
+}
+
+/* Container */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 25px;
+    background: #d6eef1;
+}
+
+/* Form */
+.container form {
+    width: 100%;
+    max-width: 700px;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+/* Rows & Columns */
+.container form .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.container form .row .col {
+    flex: 1 1 250px;
+}
+
+/* Title */
+.col .title {
+    font-size: 20px;
+    color: rgb(237, 55, 23);
+    padding-bottom: 5px;
+    font-weight: 500;
+}
+
+/* Input Fields */
+.col .inputBox {
+    margin: 15px 0;
+}
+
+.col .inputBox label {
+    margin-bottom: 10px;
+    display: block;
+    font-size: 14px;
+    color: #333;
+}
+
+.col .inputBox input,
+.col .inputBox select {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    font-size: 15px;
+    border-radius: 5px;
+    background: #f9f9f9;
+}
+
+.col .inputBox input:focus,
+.col .inputBox select:focus {
+    border-color: #333;
+    background-color: #fff;
+}
+
+/* Flex for small inputs (like Exp/Zip) */
+.col .flex {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.col .flex .inputBox {
+    flex: 1 1 120px;
+    margin-top: 5px;
+}
+
+/* Card Image */
+.col .inputBox img {
+    height: 34px;
+    margin-top: 5px;
+    filter: drop-shadow(0 0 1px #000);
+}
+
+/* Submit Button */
+.container form .submit_btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 17px;
+    background: rgb(1, 143, 34);
+    color: #fff;
+    margin-top: 15px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    border-radius: 5px;
+    border: none;
+}
+
+.container form .submit_btn:hover {
+    background: #3d17fb;
+}
+
+/* Hide number input arrows for consistency */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
