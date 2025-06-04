@@ -39,7 +39,7 @@ body {
     justify-content: center;
 }
 
-.categories_tab a{
+.categories_tab a {
     color: white;
     text-decoration: none;
     padding: 10px 20px;
@@ -97,7 +97,7 @@ body {
     z-index: 11;
 }
 
-.cart-dropdown{
+.cart-dropdown {
     top: 50px;
 }
 
@@ -108,7 +108,7 @@ body {
     right: 200px;
 }
 
-.cart-text{
+.cart-text {
     height: 30px;
     position: absolute;
     top: 20px;
@@ -130,7 +130,7 @@ body {
     width: calc(100% - 40px);
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     display: flex;
     gap: 30px;
     align-items: flex-start;
@@ -219,32 +219,37 @@ body {
 .account-section {
     background: #fff;
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     padding: 32px 32px 24px 32px;
     max-width: 90%;
     margin: 0 auto 32px auto;
 }
+
 .account-title {
     font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 18px;
     color: #222;
 }
+
 .profile-name {
     font-size: 1.2rem;
     font-weight: 500;
     margin-bottom: 18px;
     color: #3131D4;
 }
+
 .details-form {
     margin-bottom: 18px;
 }
+
 .form-label {
     display: block;
     font-weight: 500;
     margin-bottom: 6px;
     color: #222;
 }
+
 .form-input {
     width: 100%;
     padding: 10px 12px;
@@ -255,9 +260,11 @@ body {
     background: #f7f7f7;
     color: #333;
 }
+
 .edit-info-btn-container {
     text-align: right;
 }
+
 .edit-info-btn {
     margin-bottom: 14px;
     background: #3C2EFF;
@@ -270,9 +277,11 @@ body {
     font-size: 15px;
     transition: background 0.2s;
 }
+
 .edit-info-btn:hover {
     background: #2a22b8;
 }
+
 .transaction-history-section {
     position: relative;
     top: 100px;
@@ -281,56 +290,69 @@ body {
     margin: 40px auto 0 auto;
     background: #fff;
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     padding: 32px 32px 24px 32px;
 }
+
 .transaction-history-section h2 {
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 18px;
     color: #222;
 }
+
 table {
     width: 100%;
     border-collapse: collapse;
     background: #fff;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
-th, td {
+
+th,
+td {
     border: 1px solid #eee;
     padding: 10px 12px;
     text-align: left;
     font-size: 15px;
 }
+
 th {
     background: #f4f4f4;
     font-weight: bold;
 }
+
 ul {
     margin: 0;
     padding-left: 18px;
 }
+
 @media (max-width: 900px) {
-    .transaction-history-section, .account-section {
-    padding: 18px 6px;
-    }
-    .transaction-history-section {
-    max-width: 100%;
-    }
+
+    .transaction-history-section,
     .account-section {
-    max-width: 100%;
+        padding: 18px 6px;
+    }
+
+    .transaction-history-section {
+        max-width: 100%;
+    }
+
+    .account-section {
+        max-width: 100%;
     }
 }
+
 @media (max-width: 600px) {
     .navigation_top {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 12px 8px 0 8px;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px 8px 0 8px;
     }
+
     .categories_tab {
-    flex-direction: column;
-    gap: 8px;
+        flex-direction: column;
+        gap: 8px;
     }
 }

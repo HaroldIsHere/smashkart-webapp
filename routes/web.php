@@ -3,7 +3,6 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\MainController;
-use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [MainController::class, 'index'])->name('index');
@@ -25,8 +24,8 @@ Route::get('/products/productLibrary/{category}', [LinkController::class, 'produ
 Route::get('/cart', [LinkController::class, 'cart'])->name('cart.index');
 Route::post('/cart/update-quantity/{name}', [LinkController::class, 'updateQuantity']);
 Route::get('/cart/summary', [LinkController::class, 'cartSummary']);
-Route::get('/cart/count', [\App\Http\Controllers\LinkController::class, 'count']);
-Route::get('/cart/mini', [\App\Http\Controllers\LinkController::class, 'mini']);
+Route::get('/cart/count', [LinkController::class, 'count']);
+Route::get('/cart/mini', [LinkController::class, 'mini']);
 
 // Payment routes
 Route::get('/history', [LinkController::class, 'history'])->middleware('auth')->name('payment.history');
@@ -54,7 +53,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Admin routes
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/dashboard', [LinkController::class, 'dashboard'])->name('dashboard');

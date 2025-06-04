@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -135,6 +136,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="left">
     <div class="logo">SMASHKART</div>
@@ -149,10 +151,10 @@
     <form>
       <label for="email">ENTER YOUR EMAIL ADDRESS</label>
       <input type="email" id="email" placeholder="EMAIL" required />
-      
+
       <label for="password">ENTER YOUR PASSWORD</label>
       <input type="password" id="password" placeholder="PASSWORD" required />
-      
+
       <button class="submit-btn">SUBMIT</button>
     </form>
 
@@ -164,10 +166,12 @@
     <div class="social-login">
       <p>TRY OTHER METHOD</p>
       <div class="social-icons">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Login">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+          alt="Facebook Login">
         <img src="/img/extra/Google Icon.jpg" alt="Google Login">
       </div>
     </div>
   </div>
 </body>
+
 </html>

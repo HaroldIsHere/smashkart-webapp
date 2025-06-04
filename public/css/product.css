@@ -32,7 +32,7 @@ body {
     justify-content: center;
 }
 
-.categories_tab a{
+.categories_tab a {
     color: white;
     text-decoration: none;
     padding: 10px 20px;
@@ -90,7 +90,7 @@ body {
     z-index: 11;
 }
 
-.cart-dropdown{
+.cart-dropdown {
     top: 50px;
 }
 
@@ -101,7 +101,7 @@ body {
     right: 200px;
 }
 
-.cart-text{
+.cart-text {
     height: 30px;
     position: absolute;
     top: 5px;
@@ -132,7 +132,7 @@ body {
     height: 470px;
 }
 
-.product-details{
+.product-details {
     position: absolute;
     top: 0;
     left: 900px;
@@ -190,14 +190,17 @@ body {
     gap: 16px;
     padding: 10px;
     scroll-behavior: smooth;
-    
+
     /* Hide scrollbar in all major browsers */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* IE 10+ */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE 10+ */
 }
 
 .slider-container::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
+    /* Chrome, Safari, Opera */
 }
 
 .bag-card {
@@ -243,14 +246,17 @@ body {
     margin-top: 18px;
     transition: background 0.2s;
 }
+
 .add-to-cart-btn:hover {
     background: #2a22b8;
 }
+
 .quantity-selector {
     display: flex;
     align-items: center;
     margin: 12px 0;
 }
+
 .quantity-btn {
     background: #f2f2f2;
     border: 1px solid #ccc;
@@ -263,9 +269,11 @@ body {
     margin: 0 6px;
     transition: background 0.2s;
 }
+
 .quantity-btn:hover {
     background: #e0e0e0;
 }
+
 .quantity-input {
     width: 48px;
     text-align: center;

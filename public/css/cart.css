@@ -33,7 +33,7 @@ body {
     justify-content: center;
 }
 
-.categories_tab a{
+.categories_tab a {
     color: white;
     text-decoration: none;
     padding: 10px 20px;
@@ -91,7 +91,7 @@ body {
     z-index: 11;
 }
 
-.cart-dropdown{
+.cart-dropdown {
     top: 50px;
 }
 
@@ -102,7 +102,7 @@ body {
     right: 200px;
 }
 
-.cart-text{
+.cart-text {
     height: 30px;
     position: absolute;
     top: 5px;
@@ -124,7 +124,8 @@ body {
 }
 
 nav {
-    background-color: #3f51b5; /* Slightly lighter blue */
+    background-color: #3f51b5;
+    /* Slightly lighter blue */
     color: white;
     padding: 10px 20px;
 }
@@ -153,7 +154,7 @@ nav ul li a {
     padding: 20px;
 }
 
-.cart-container { 
+.cart-container {
     position: relative;
     top: 120px;
     left: 30px;
@@ -178,7 +179,7 @@ nav ul li a {
 .cart-header h2 {
     margin: 0;
     font-size: 20px;
-    
+
 }
 
 .cart-header label {
@@ -187,7 +188,8 @@ nav ul li a {
 }
 
 .cart-header a.clear-cart {
-    color: #d32f2f; /* Red */
+    color: #d32f2f;
+    /* Red */
     text-decoration: none;
     font-size: 14px;
 }
@@ -274,7 +276,8 @@ nav ul li a {
 }
 
 .item-actions i.fa-check-circle {
-    color: #4caf50; /* Green */
+    color: #4caf50;
+    /* Green */
     font-size: 20px;
     margin-left: 10px;
 }
@@ -329,7 +332,8 @@ nav ul li a {
 }
 
 .checkout-button {
-    background-color: #ffc107; /* Yellow */
+    background-color: #ffc107;
+    /* Yellow */
     color: #333;
     border: none;
     padding: 15px 20px;
@@ -347,26 +351,27 @@ nav ul li a {
     background-color: #fff;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
 
-    .cart-table th, .cart-table td {
-        border: 1px solid #e0e0e0;
-        padding: 12px 16px;
-        text-align: left;
-    }
+.cart-table th,
+.cart-table td {
+    border: 1px solid #e0e0e0;
+    padding: 12px 16px;
+    text-align: left;
+}
 
-    .cart-table th {
-        background-color: #f5f5f5;
-        color: #3131D4;
-        font-weight: 600;
-        font-size: 15px;
-    }
+.cart-table th {
+    background-color: #f5f5f5;
+    color: #3131D4;
+    font-weight: 600;
+    font-size: 15px;
+}
 
-    .cart-table tr:nth-child(even) {
-        background-color: #fafafa;
-    }
+.cart-table tr:nth-child(even) {
+    background-color: #fafafa;
+}
 
-    .cart-table tr:hover {
-        background-color: #f0f4ff;
-    }
+.cart-table tr:hover {
+    background-color: #f0f4ff;
+}

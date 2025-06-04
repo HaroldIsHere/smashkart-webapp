@@ -1,87 +1,85 @@
 <style>
-
     * {
-      box-sizing: border-box;
-      font-family: 'Montserrat', sans-serif;
-      margin: 0;
-      padding: 0;
+        box-sizing: border-box;
+        font-family: 'Montserrat', sans-serif;
+        margin: 0;
+        padding: 0;
     }
 
     body {
-      display: flex;
-      height: 100vh;
+        display: flex;
+        height: 100vh;
     }
 
     .ImageContainer {
-      width: 50%;
+        width: 50%;
     }
 
     .left img {
-      width: 100%;
-      height: calc(100% - 60px);
-      object-fit: cover;
+        width: 100%;
+        height: calc(100% - 60px);
+        object-fit: cover;
     }
 
     .right {
-      width: 50%;
-      padding: 60px 80px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      background: #fff;
+        width: 50%;
+        padding: 60px 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: #fff;
     }
 
     input[type="email"],
     input[type="password"] {
-      width: 100%;
-      padding: 20px 16px;
-      border: 1px solid #f2f2f2;
-      background-color: #f2f2f2;
-      border-radius: 15px;
-      font-size: 14px;
-      margin-bottom: 20px;
+        width: 100%;
+        padding: 20px 16px;
+        border: 1px solid #f2f2f2;
+        background-color: #f2f2f2;
+        border-radius: 15px;
+        font-size: 14px;
+        margin-bottom: 20px;
     }
 
     .label[for="email"],
     .label[for="password"] {
-      font-size: 15px;
-      font-weight: 600;
-      color: #000;
-      margin-bottom: 6px;
-      display: block;
+        font-size: 15px;
+        font-weight: 600;
+        color: #000;
+        margin-bottom: 6px;
+        display: block;
     }
 
-    .block.mt-4{
-        
-    }
+    .block.mt-4 {}
 
-    .text-2xl.font-bold.mb-6{
+    .text-2xl.font-bold.mb-6 {
         margin-bottom: 34px;
     }
 
-    .ms-3{
-      background: #3C2EFF;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 600;
-      border: none;
-      width: 100%;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-      padding: 20px 16px;
+    .ms-3 {
+        background: #3C2EFF;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        border: none;
+        width: 100%;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 20px 16px;
     }
 
-    .container{
+    .container {
         width: 100%;
         display: flex;
     }
 
-        .signup-option {
+    .signup-option {
         margin-top: 24px;
         text-align: center;
         font-size: 15px;
     }
+
     .signup-link {
         color: #3C2EFF;
         text-decoration: underline;
@@ -89,6 +87,7 @@
         font-weight: 600;
         transition: color 0.2s;
     }
+
     .signup-link:hover {
         color: #2a22b8;
     }
@@ -140,7 +139,8 @@
         color: #2a22b8;
     }
 
-    .x-input-error, .mt-2 {
+    .x-input-error,
+    .mt-2 {
         color: #d32f2f;
         background: #fff0f0;
         border: 1px solid #f8d7da;
@@ -151,11 +151,10 @@
         font-weight: 500;
         display: block;
     }
-
 </style>
 
 <div class="ImageContainer">
-    <img src="/img/extra/Picture1.png" alt="Badminton Image" class="left"/>
+    <img src="/img/extra/Picture1.png" alt="Badminton Image" class="left" />
 </div>
 
 <!-- Session Status -->
@@ -165,23 +164,24 @@
     @csrf
 
     <div style="display: flex; flex-direction: row; align-items: center; width: 100%; margin-bottom: 34px;">
-        <h1 class="text-2xl font-bold mb-6" style="margin-bottom: 0; align-self: center;">{{ __('LOG IN ACCOUNT') }}</h1>
-        <a href="{{ route('index') }}" class="text-sm text-gray-600 hover:text-gray-900 underline mb-4" style="margin-left: auto; color: #3C2EFF; text-decoration: underline; align-self: center;">
+        <h1 class="text-2xl font-bold mb-6" style="margin-bottom: 0; align-self: center;">{{ __('LOG IN ACCOUNT') }}
+        </h1>
+        <a href="{{ route('index') }}" class="text-sm text-gray-600 hover:text-gray-900 underline mb-4"
+            style="margin-left: auto; color: #3C2EFF; text-decoration: underline; align-self: center;">
             {{ __('Back to Home') }}
         </a>
     </div>
 
     <!-- Email Address -->
     <x-input-label for="email" :value="__('ENTER YOUR EMAIL ADDRESS')" class="label" />
-    <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+    <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
+        autofocus autocomplete="username" />
     <x-input-error :messages="$errors->get('email')" class="mt-2" />
 
     <!-- Password -->
     <x-input-label for="password" :value="__('ENTER YOUR PASSWORD')" class="label" />
-    <x-text-input id="password" class="block mt-1 w-full"
-                    type="password"
-                    name="password"
-                    required autocomplete="current-password" />
+    <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
+        autocomplete="current-password" />
     <x-input-error :messages="$errors->get('password')" class="mt-2" />
 
     <x-primary-button class="ms-3">

@@ -32,7 +32,7 @@ body {
     justify-content: center;
 }
 
-.categories_tab a{
+.categories_tab a {
     color: white;
     text-decoration: none;
     padding: 10px 20px;
@@ -90,7 +90,7 @@ body {
     z-index: 11;
 }
 
-.cart-dropdown{
+.cart-dropdown {
     top: 50px;
 }
 
@@ -101,7 +101,7 @@ body {
     right: 200px;
 }
 
-.cart-text{
+.cart-text {
     height: 30px;
     position: absolute;
     top: 5px;
@@ -140,14 +140,17 @@ body {
     gap: 16px;
     padding: 10px;
     scroll-behavior: smooth;
-    
+
     /* Hide scrollbar in all major browsers */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* IE 10+ */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE 10+ */
 }
 
 .slider-container::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
+    /* Chrome, Safari, Opera */
 }
 
 .bag-card {
@@ -172,7 +175,7 @@ body {
 }
 
 .bag-card:hover {
-  transform: translateY(-5px);
+    transform: translateY(-5px);
 }
 
 .badge {
@@ -198,8 +201,10 @@ body {
     display: flex;
     justify-content: space-between;
     transform: translateY(-50%);
-    z-index: 3; /* make sure it stays above the image */
-    pointer-events: none; /* allows buttons to float without blocking image */
+    z-index: 3;
+    /* make sure it stays above the image */
+    pointer-events: none;
+    /* allows buttons to float without blocking image */
 }
 
 .prevBtn,
@@ -212,7 +217,8 @@ body {
     font-size: 24px;
     border-radius: 50%;
     cursor: pointer;
-    pointer-events: auto; /* re-enable clicks */
+    pointer-events: auto;
+    /* re-enable clicks */
 }
 
 .prevBtn {
@@ -228,7 +234,7 @@ body {
     margin-top: 20px;
 }
 
-.adds{
+.adds {
     width: 90%;
     height: auto;
     display: block;
@@ -265,12 +271,12 @@ body {
 }
 
 .add-to-cart-btn {
-    position:absolute; 
-    bottom:10px; 
-    right:10px; 
-    background:#fff; 
-    border-radius:50%; 
-    padding:8px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: #fff;
+    border-radius: 50%;
+    padding: 8px;
 }
 
 .add-to-cart-btn:hover {

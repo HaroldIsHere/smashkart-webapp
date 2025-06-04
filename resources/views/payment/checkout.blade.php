@@ -114,34 +114,33 @@
       @if(isset($cart) && count($cart))
       <h3>Cart Summary</h3>
       <table style="width:100%; border-collapse:collapse; margin-bottom:24px;">
-        <thead>
-          <tr style="background:#f4f4f4;">
-            <th style="padding:8px; border:1px solid #ddd;">Product</th>
-            <th style="padding:8px; border:1px solid #ddd;">Quantity</th>
-            <th style="padding:8px; border:1px solid #ddd;">Price</th>
-            <th style="padding:8px; border:1px solid #ddd;">Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          @php $total = 0; @endphp
-          @foreach($cart as $item)
-          @php $subtotal = $item['quantity'] * $item['price'];
-          $total += $subtotal; @endphp
-          <tr>
-            <td style="padding:8px; border:1px solid #ddd;">{{ $item['name'] }}</td>
-            <td style="padding:8px; border:1px solid #ddd;">{{ $item['quantity'] }}</td>
-            <td style="padding:8px; border:1px solid #ddd;">₱{{ number_format($item['price'], 2) }}</td>
-            <td style="padding:8px; border:1px solid #ddd;">₱{{ number_format($subtotal, 2) }}</td>
-          </tr>
-          @endforeach
-          <tr>
-            <td colspan="3"
-              style="text-align:right; font-weight:bold; padding:8px; border:1px solid #ddd;">Total</td>
-            <td style="padding:8px; border:1px solid #ddd; font-weight:bold;">₱{{ number_format($total, 2) }}</td>
-          </tr>
-        </tbody>
+      <thead>
+        <tr style="background:#f4f4f4;">
+        <th style="padding:8px; border:1px solid #ddd;">Product</th>
+        <th style="padding:8px; border:1px solid #ddd;">Quantity</th>
+        <th style="padding:8px; border:1px solid #ddd;">Price</th>
+        <th style="padding:8px; border:1px solid #ddd;">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        @php $total = 0; @endphp
+        @foreach($cart as $item)
+        @php $subtotal = $item['quantity'] * $item['price'];
+      $total += $subtotal; @endphp
+        <tr>
+        <td style="padding:8px; border:1px solid #ddd;">{{ $item['name'] }}</td>
+        <td style="padding:8px; border:1px solid #ddd;">{{ $item['quantity'] }}</td>
+        <td style="padding:8px; border:1px solid #ddd;">₱{{ number_format($item['price'], 2) }}</td>
+        <td style="padding:8px; border:1px solid #ddd;">₱{{ number_format($subtotal, 2) }}</td>
+        </tr>
+      @endforeach
+        <tr>
+        <td colspan="3" style="text-align:right; font-weight:bold; padding:8px; border:1px solid #ddd;">Total</td>
+        <td style="padding:8px; border:1px solid #ddd; font-weight:bold;">₱{{ number_format($total, 2) }}</td>
+        </tr>
+      </tbody>
       </table>
-      @endif
+    @endif
 
       <input type="submit" value="Proceed to Checkout" class="submit_btn" />
     </form>
