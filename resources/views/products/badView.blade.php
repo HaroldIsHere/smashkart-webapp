@@ -120,7 +120,10 @@
                         }
                     }
                 </script>
-                <button class="add-to-cart-btn">Add to Cart</button>
+                <button class="add-to-cart-btn"
+                    onclick="addToCart('bad', {{ $bad->BadID }}, document.getElementById('quantity').value)">
+                    Add to Cart
+                </button>
             </div>
             <div class="product-details">
                 <h2>Description</h2>
@@ -181,5 +184,55 @@
                 </div>
             </div>
         </div>
+        <script>
+async function updateCartCountAndDropdown() {
+    try {
+        // Update cart count
+        const res = await fetch('/cart/count');
+        const data = await res.json();
+        document.getElementById('cart-count').textContent = `(${data.count})`;
+
+        // Update cart dropdown content
+        const dropdownRes = await fetch('/cart/mini');
+        const dropdownHtml = await dropdownRes.text();
+        const menu = document.getElementById('cartDropdownMenu');
+        if (menu) menu.innerHTML = dropdownHtml;
+    } catch (err) {
+        console.error('Failed to update cart info:', err);
+    }
+}
+
+async function addToCart(type, productId, quantity = 1) {
+    try {
+        const res = await fetch(`/cart/add/${type}/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ quantity })
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            if (data.success) {
+                await updateCartCountAndDropdown();
+                alert('Added to cart!');
+            } else {
+                alert('Failed to add to cart.');
+            }
+        } else {
+            alert('Failed to add to cart.');
+        }
+    } catch (err) {
+        console.error('Error:', err);
+        alert('Failed to add to cart.');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateCartCountAndDropdown();
+});
+</script>
     </body>
 </html>

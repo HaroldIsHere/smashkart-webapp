@@ -115,12 +115,33 @@
                         <img src="{{ asset('img/Products/Bag/' . $bag->Name . '.jpg') }}" alt="{{ $bag->Name }}" style="width:100%; height:150px; object-fit:cover; border-radius:8px;">
                         <h3>{{ $bag->Name }}</h3>
                         <p><strong>Price:</strong> ₱{{ number_format($bag->SRP, 2) }}</p>
-                        @if($bag->RC)
-                            <span class="badge">RC</span>
-                        @endif
-                        @if($bag->SC)
-                            <span class="badge">SC</span>
-                        @endif
+                            @if($bag->RC)
+                                <span class="badge" style="cursor:pointer;" onclick="showBadgeDesc(event, 'This bag has a Racket Compartment.')">
+                                    <img src="/img/Icons/RC.png" alt="RC" style="width:20px; height:20px; vertical-align:middle;">
+                                </span>
+                            @endif
+                            @if($bag->SC)
+                                <span class="badge" style="cursor:pointer;" onclick="showBadgeDesc(event, 'This bag has a Shoe Compartment.')">
+                                    <img src="/img/Icons/SC.png" alt="SC" style="width:20px; height:20px; vertical-align:middle;">
+                                </span>
+                            @endif
+                            <span id="badge-desc-popup" style="display:none; position:absolute; background:#222; color:#fff; padding:8px 12px; border-radius:6px; font-size:14px; z-index:999;"></span>
+                            <script>
+                                function showBadgeDesc(e, desc) {
+                                    e.stopPropagation();
+                                    let popup = document.getElementById('badge-desc-popup');
+                                    popup.textContent = desc;
+                                    popup.style.display = 'block';
+                                    // Position popup near the badge
+                                    const rect = e.currentTarget.getBoundingClientRect();
+                                    popup.style.left = (rect.left + window.scrollX) + 'px';
+                                    popup.style.top = (rect.bottom + window.scrollY + 5) + 'px';
+                                }
+                                document.addEventListener('click', function() {
+                                    let popup = document.getElementById('badge-desc-popup');
+                                    popup.style.display = 'none';
+                                });
+                            </script>
                         <a href="javascript:void(0);" onclick="addToCart('bag', {{ $bag->BagID }})" class="add-to-cart-btn">
                             <img src="/img/Icons/AddToCart.png" alt="Add to Cart" style="width:20px; vertical-align:middle;">
                         </a>
@@ -161,12 +182,6 @@
                         <img src="{{ asset('img/Products/Rackets/' . $bad->Name . '.jpg') }}" alt="{{ $bad->Name }}" style="width:100%; height:150px; object-fit:cover; border-radius:8px;">
                         <h3>{{ $bad->Name }}</h3>
                         <p><strong>Price:</strong> ₱{{ number_format($bad->SRP, 2) }}</p>
-                        @if($bad->RC)
-                            <span class="badge">RC</span>
-                        @endif
-                        @if($bad->SC)
-                            <span class="badge">SC</span>
-                        @endif
                         <a href="javascript:void(0);" onclick="addToCart('bad', {{ $bad->BadID }})" class="add-to-cart-btn">
                             <img src="/img/Icons/AddToCart.png" alt="Add to Cart" style="width:20px; vertical-align:middle;">
                         </a>
@@ -211,17 +226,23 @@
             </div>
         </div>
     <script>
-    async function updateCartCount() {
+    async function updateCartCountAndDropdown() {
         try {
+            // Update cart count
             const res = await fetch('/cart/count');
             const data = await res.json();
             document.getElementById('cart-count').textContent = `(${data.count})`;
+
+            // Update cart dropdown content
+            const dropdownRes = await fetch('/cart/mini');
+            const dropdownHtml = await dropdownRes.text();
+            const menu = document.getElementById('cartDropdownMenu');
+            if (menu) menu.innerHTML = dropdownHtml;
         } catch (err) {
-            console.error('Failed to fetch cart count:', err);
+            console.error('Failed to update cart info:', err);
         }
     }
 
-    // ...existing code...
     async function addToCart(type, productId) {
         try {
             const res = await fetch(`/cart/add/${type}/${productId}`, {
@@ -233,7 +254,7 @@
             });
 
             if (res.ok) {
-                await updateCartCount();
+                await updateCartCountAndDropdown();
             } else {
                 alert('Failed to add to cart.');
             }
@@ -241,7 +262,11 @@
             console.error('Error:', err);
         }
     }
-// ...existing code...
+
+    // Optionally, update on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateCartCountAndDropdown();
+    });
     </script>
     </body>
 </html>

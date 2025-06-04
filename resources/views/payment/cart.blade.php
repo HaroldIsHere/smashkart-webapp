@@ -146,6 +146,7 @@
                             $subtotal = $item['price'] * $item['quantity'];
                             $totalItems += $item['quantity'];
                             $totalPrice += $subtotal;
+                            $itemID = $item['id'] ?? $item['name'];
                         @endphp
                         <tr>
                             <td>
@@ -153,14 +154,22 @@
                                     $imageName = $item['name'] . '.jpg';
                                     $type = isset($item['type']) ? $item['type'] : 'default';
                                     $imageUrl = asset('/img/Products/' . $type . '/' . $imageName);
-                                    $itemID = $item['id'] ?? $item['name'];
                                 @endphp
                                 <img src="{{ $imageUrl }}" alt="{{ $item['name'] }}" class="cart-product-img" width="50" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<span>No Image</span>');">
                             </td>
                             <td>{{ $item['name'] }}</td>
                             <td>₱{{ number_format($item['price'], 2) }}</td>
-                            <td>{{ $item['quantity'] }}</td>
-                            <td>₱{{ number_format($subtotal, 2) }}</td>
+                            <td>
+                                <input 
+                                    type="number" 
+                                    min="1" 
+                                    class="quantity-input" 
+                                    data-name="{{ $item['name'] }}" 
+                                    value="{{ $item['quantity'] }}" 
+                                    style="width:60px; padding:4px; border-radius:4px; border:1px solid #ccc; text-align:center;"
+                                >
+                            </td>
+                            <td class="subtotal-cell">₱{{ number_format($subtotal, 2) }}</td>
                             <td>
                                 <button type="button" class="remove-button" data-name="{{ $item['name'] }}">Remove</button>
                             </td>
@@ -180,7 +189,18 @@
             </script>
         @endif
     </div>
+
 </body>
+<script>
+function updateCartSummary() {
+    fetch('/cart/summary')
+        .then(res => res.json())
+        .then data => {
+            document.getElementById('cart-total-items').textContent = data.totalItems;
+            document.getElementById('cart-total-price').textContent = '₱' + parseFloat(data.totalPrice).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+        };
+}
+</script>
 <script>
     document.querySelectorAll('.remove-button').forEach(button => {
         button.addEventListener('click', async () => {
@@ -205,14 +225,51 @@
         });
     });
 
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('change', async function() {
+            let newQty = parseInt(this.value);
+            if (isNaN(newQty) || newQty < 1) {
+                this.value = 1;
+                newQty = 1;
+            }
+            const itemName = this.getAttribute('data-name');
+            const encodedName = encodeURIComponent(itemName);
+
+            // Send AJAX request to update quantity
+            const response = await fetch(`/cart/update-quantity/${encodedName}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ quantity: newQty })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                // Update subtotal cell
+                const row = this.closest('tr');
+                row.querySelector('.subtotal-cell').textContent = `₱${parseFloat(data.subtotal).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+                updateCartSummary();
+            } else {
+                alert('Failed to update quantity.');
+            }
+        });
+    });
+
     function updateCartSummary() {
         let totalItems = 0;
         let totalPrice = 0;
 
         document.querySelectorAll('.cart-table tbody tr').forEach(row => {
-            const quantity = parseInt(row.querySelector('td:nth-child(4)').textContent);
-            const subtotalText = row.querySelector('td:nth-child(5)').textContent.replace(/[₱,]/g, '');
-            const subtotal = parseFloat(subtotalText);
+            // Get the quantity from the input field, not from textContent
+            const quantityInput = row.querySelector('input.quantity-input');
+            const quantity = quantityInput ? parseInt(quantityInput.value) : 0;
+
+            // Get the subtotal from the .subtotal-cell, remove ₱ and commas
+            const subtotalText = row.querySelector('.subtotal-cell').textContent.replace(/[₱,]/g, '');
+            const subtotal = parseFloat(subtotalText) || 0;
 
             totalItems += quantity;
             totalPrice += subtotal;

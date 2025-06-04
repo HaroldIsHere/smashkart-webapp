@@ -228,6 +228,54 @@ body {
     font-size: 12px;
 }
 
+.add-to-cart-btn {
+    position: absolute;
+    top: 400px;
+    width: 86%;
+    background: #3C2EFF;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 18px;
+    transition: background 0.2s;
+}
+.add-to-cart-btn:hover {
+    background: #2a22b8;
+}
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    margin: 12px 0;
+}
+.quantity-btn {
+    background: #f2f2f2;
+    border: 1px solid #ccc;
+    color: #333;
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0 6px;
+    transition: background 0.2s;
+}
+.quantity-btn:hover {
+    background: #e0e0e0;
+}
+.quantity-input {
+    width: 48px;
+    text-align: center;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fafafa;
+    margin: 0 4px;
+}
+
 .footer {
     position: relative;
     bottom: 0;

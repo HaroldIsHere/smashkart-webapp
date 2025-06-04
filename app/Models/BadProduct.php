@@ -11,6 +11,6 @@ class BadProduct extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'Name', 'SRP'
+        'Name', 'SRP', 'Type'
     ];
 }

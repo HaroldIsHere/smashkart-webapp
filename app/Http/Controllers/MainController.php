@@ -21,7 +21,7 @@ class MainController extends Controller
         return view('welcome', compact('bads', 'bags', 'shoes', 'accessories', 'apparels')); // Pass to welcome.blade.php
     }
 
-    public function addToCart($type, $id, Request $request)
+    public function addToCart(Request $request, $type, $id)
     {
         $categoryNames = [
             'bag' => 'Bag',
@@ -32,67 +32,71 @@ class MainController extends Controller
             'apparel' => 'Apparel'
         ];
 
-        // Determine the model based on the type
+        // Determine the model and ID property based on the type
         switch (strtolower($type)) {
             case 'bag':
                 $product = BagProduct::find($id);
+                $idField = 'BagID';
                 break;
             case 'bad':
                 $product = BadProduct::find($id);
+                $idField = 'BadID';
                 break;
             case 'shoe':
                 $product = ShoeProduct::find($id);
+                $idField = 'ShoeID';
                 break;
             case 'accessory':
             case 'accessories':
                 $product = AccessoriesProduct::find($id);
+                $idField = 'AccessoryID';
                 break;
             case 'apparel':
                 $product = ApparelProduct::find($id);
+                $idField = 'AppID';
                 break;
             default:
-                $product = null;
+                return response()->json(['success' => false, 'message' => 'Invalid product type.']);
         }
 
         if (!$product) {
-            // Return JSON for AJAX, redirect for normal requests
-            if ($request->ajax()) {
-                return response()->json(['success' => false, 'message' => 'Product not found.']);
-            }
-            return redirect()->back()->with('error', 'Product not found.');
+            return response()->json(['success' => false, 'message' => 'Product not found.']);
         }
 
         $cart = session('cart', []);
-        $cartKey = $type . '_' . $id;
-        $quantity = (int) $request->input('quantity', 1);
+        $found = false;
+        foreach ($cart as &$item) {
+            // Check type, then name, then id
+            if (
+                isset($item['type'], $item['name'], $item['id']) &&
+                $item['type'] === $type &&
+                $item['name'] === $product->Name &&
+                $item['id'] == $product->{$idField}
+            ) {
+                $item['quantity'] += $request->input('quantity', 1);
+                $found = true;
+                break;
+            }
+        }
+        unset($item);
 
-        if (isset($cart[$cartKey])) {
-            $cart[$cartKey]['quantity'] += $quantity;
-        } else {
-            $cart[$cartKey] = [
-                'id' => $product->getKey(),
+        if (!$found) {
+            $cart[] = [
+                'id' => $product->{$idField},
                 'name' => $product->Name,
                 'price' => $product->SRP,
-                'quantity' => $quantity,
+                'quantity' => $request->input('quantity', 1),
+                'category' => ucfirst($type),
                 'type' => $type,
-                'category' => $categoryNames[strtolower($type)] ?? ucfirst($type),
             ];
         }
 
-        session()->put('cart', $cart);
+        session(['cart' => $cart]);
 
-        // Return JSON for AJAX, redirect for normal requests
-        if ($request->ajax()) {
-            // Count total items (sum of quantities) for cart count
-            $cartCount = array_sum(array_column($cart, 'quantity'));
-            return response()->json([
-                'success' => true,
-                'cartCount' => $cartCount,
-                'message' => 'Product added to cart successfully!'
-            ]);
-        }
-
-        return redirect()->route('index')->with('success', 'Product added to cart successfully!');
+        return response()->json([
+            'success' => true,
+            'cartCount' => count($cart)
+        ]);
     }
 
     public function removeByName($name)

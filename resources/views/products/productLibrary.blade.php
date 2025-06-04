@@ -1,3 +1,14 @@
+@php
+    $typeMap = [
+        'Rackets' => 'bad',
+        'Shoes' => 'shoe',
+        'Bag' => 'bag',
+        'Accessories' => 'accessory',
+        'Apparel' => 'apparel'
+    ];
+    $typeForAddToCart = $typeMap[$activeCategoryName] ?? strtolower($activeCategoryName);
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,9 +16,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SmashKart - Rackets</title>
   <link rel="stylesheet" href="/css/style.css">
-
-  <!-- Font Awesome for Icons -->
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -115,18 +123,32 @@
 <p class="category-title">{{ $activeCategoryName }}</p>
 <div class="container">
     <div class="products">
+        @php
+            $idProperty = match($typeForAddToCart) {
+                'bad' => 'BadID',
+                'bag' => 'BagID',
+                'shoe' => 'ShoeID',
+                'accessory' => 'AccessoryID',
+                'apparel' => 'AppID',
+                default => 'id'
+            };
+        @endphp
+
         @forelse($products as $product)
             <div class="product">
-            <a href="{{ route('products.' . $categoryViewRoute, ['name' => $product->Name]) }}" style="text-decoration:none; color:inherit;">
+                <a href="{{ route('products.' . $categoryViewRoute, ['name' => $product->Name]) }}" style="text-decoration:none; color:inherit;">
                     <img src="{{ asset('img/Products/' . $activeCategoryName . '/' . $product->Name . '.jpg') }}" alt="{{ $product->Name ?? 'No Name' }}" style="width:100%; height:150px; object-fit:cover; border-radius:8px;">
                     <h4>{{ $product->Name ?? 'No Name' }}</h4>
                     <p class="product-price">
                         ₱{{ isset($product->SRP) ? number_format($product->SRP, 2) : '0.00' }}
                     </p>
-                    <a href="javascript:void(0);" onclick="addToCart('{{ strtolower($activeCategoryName) }}', {{ $product->id ?? $product->ID ?? $product->BagID ?? 'null' }})" class="add-to-cart-btn">
-                        <img src="/img/Icons/AddToCart.png" alt="Add to Cart" style="width:20px; vertical-align:middle;">
-                    </a>
                 </a>
+                <button type="button"
+                    onclick="addToCart('{{ $typeForAddToCart }}', {{ $product->{$idProperty} ?? 'null' }})"
+                    class="add-to-cart-btn"
+                    style="background:none;border:none;cursor:pointer;">
+                    <img src="/img/Icons/AddToCart.png" alt="Add to Cart" style="width:20px; vertical-align:middle;">
+                </button>
             </div>
         @empty
             <p>No products found in this category.</p>
@@ -135,27 +157,55 @@
 </div>
 
 <script>
-function addToCart(type, id) {
-    // Use the correct route with parameters as defined in web.php
-    fetch(`/cart/add/${type}/${id}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({ quantity: 1 })
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Optionally update cart count or show a message
-        if(data.success) {
-            document.getElementById('cart-count').textContent = '(' + data.cartCount + ')';
-            alert('Added to cart!');
+async function updateCartCountAndDropdown() {
+    try {
+        // Update cart count
+        const res = await fetch('/cart/count');
+        const data = await res.json();
+        document.getElementById('cart-count').textContent = `(${data.count})`;
+
+        // Update cart dropdown content
+        const dropdownRes = await fetch('/cart/mini');
+        const dropdownHtml = await dropdownRes.text();
+        const menu = document.getElementById('cartDropdownMenu');
+        if (menu) menu.innerHTML = dropdownHtml;
+    } catch (err) {
+        console.error('Failed to update cart info:', err);
+    }
+}
+
+async function addToCart(type, productId) {
+    try {
+        const res = await fetch(`/cart/add/${type}/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ quantity: 1 })
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            if (data.success) {
+                await updateCartCountAndDropdown();
+                alert('Added to cart!');
+            } else {
+                alert('Failed to add to cart.');
+            }
         } else {
             alert('Failed to add to cart.');
         }
-    });
+    } catch (err) {
+        console.error('Error:', err);
+        alert('Failed to add to cart.');
+    }
 }
+
+// Optionally, update on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateCartCountAndDropdown();
+});
 </script>
 
 <div class="footer">

@@ -2,8 +2,6 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LinkController;
-use App\Http\Controllers\BagProductController;
-use App\Http\Controllers\BadmintonProductController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
@@ -22,9 +20,15 @@ Route::get('/products/appView/{name}', [LinkController::class, 'appView'])->name
 Route::get('/products/bags', [LinkController::class, 'bag'])->name('products.bags');
 Route::get('/products/productLibrary/{category}', [LinkController::class, 'productLibrary'])->name('products.productLibrary');
 
+
+// Cart routes
 Route::get('/cart', [LinkController::class, 'cart'])->name('cart.index');
-Route::get('/checkout', [LinkController::class, 'checkout'])->name('checkout');
-Route::post('/checkout', [LinkController::class, 'processCheckout'])->name('checkout.process');
+Route::post('/cart/update-quantity/{name}', [LinkController::class, 'updateQuantity']);
+Route::get('/cart/summary', [LinkController::class, 'cartSummary']);
+Route::get('/cart/count', [\App\Http\Controllers\LinkController::class, 'count']);
+Route::get('/cart/mini', [\App\Http\Controllers\LinkController::class, 'mini']);
+
+// Payment routes
 Route::get('/history', [LinkController::class, 'history'])->middleware('auth')->name('payment.history');
 
 
@@ -39,24 +43,27 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    //Authenticated user routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/acc', [LinkController::class, 'account'])->name('acc.acc');
+    // Payment routes
+    Route::get('/checkout', [LinkController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout', [LinkController::class, 'processCheckout'])->name('checkout.process');
 });
 
 // Admin routes
-
 require __DIR__.'/auth.php';
-
 
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/dashboard', [LinkController::class, 'dashboard'])->name('dashboard');
     Route::get('/users', [LinkController::class, 'users'])->name('users');
     Route::get('/settings', [LinkController::class, 'settings'])->name('settings');
-    Route::get('/reports', [LinkController::class, 'reports'])->name('reports');
+    Route::get('/report-inventory', [LinkController::class, 'reportInventory'])->name('reportInventory'); // <-- Add this line
     Route::post('/logout', [LinkController::class, 'logout'])->name('logout');
     Route::get('/adminPage', [LinkController::class, 'adminPage'])->name('adminPage');
-    Route::patch('/admin/transaction/{transaction}/status', [App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('admin.transaction.status');
+    Route::get('/orders', [LinkController::class, 'orderManagement'])->name('orders');
+    Route::patch('/transaction/{transaction}/status', [LinkController::class, 'updateStatus'])->name('transaction.status');
 });
 

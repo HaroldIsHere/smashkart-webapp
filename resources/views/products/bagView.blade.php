@@ -160,11 +160,32 @@
                         <h3>{{ $bag->Name }}</h3>
                         <p><strong>Price:</strong> ₱{{ number_format($bag->SRP, 2) }}</p>
                         @if($bag->RC)
-                            <span class="badge">RC</span>
+                            <span class="badge" style="cursor:pointer;" onclick="showBadgeDesc(event, 'This bag has a Racket Compartment.')">
+                                <img src="/img/Icons/RC.png" alt="RC" style="width:20px; height:20px; vertical-align:middle;">
+                            </span>
                         @endif
                         @if($bag->SC)
-                            <span class="badge">SC</span>
+                            <span class="badge" style="cursor:pointer;" onclick="showBadgeDesc(event, 'This bag has a Shoe Compartment.')">
+                                <img src="/img/Icons/SC.png" alt="SC" style="width:20px; height:20px; vertical-align:middle;">
+                            </span>
                         @endif
+                        <span id="badge-desc-popup" style="display:none; position:absolute; background:#222; color:#fff; padding:8px 12px; border-radius:6px; font-size:14px; z-index:999;"></span>
+                        <script>
+                            function showBadgeDesc(e, desc) {
+                                e.stopPropagation();
+                                let popup = document.getElementById('badge-desc-popup');
+                                popup.textContent = desc;
+                                popup.style.display = 'block';
+                                // Position popup near the badge
+                                const rect = e.currentTarget.getBoundingClientRect();
+                                popup.style.left = (rect.left + window.scrollX) + 'px';
+                                popup.style.top = (rect.bottom + window.scrollY + 5) + 'px';
+                            }
+                            document.addEventListener('click', function() {
+                                let popup = document.getElementById('badge-desc-popup');
+                                popup.style.display = 'none';
+                            });
+                        </script>
                     </div>
                 </a>
                 @endforeach
@@ -183,73 +204,57 @@
             </div>
         </div>
         <script>
-            function addToCart(type, id) {
-                const quantity = parseInt(document.getElementById('quantity').value) || 1;
-                fetch(`/cart/add/${type}/${id}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ quantity: quantity })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.success) {
-                        document.getElementById('cart-count').textContent = '(' + data.cartCount + ')';
-                        alert('Added to cart!');
-                    } else {
-                        alert('Failed to add to cart.');
-                    }
-                })
-                .catch(() => alert('Failed to add to cart.'));
+async function updateCartCountAndDropdown() {
+    try {
+        // Update cart count
+        const res = await fetch('/cart/count');
+        const data = await res.json();
+        document.getElementById('cart-count').textContent = `(${data.count})`;
+
+        // Update cart dropdown content
+        const dropdownRes = await fetch('/cart/mini');
+        const dropdownHtml = await dropdownRes.text();
+        const menu = document.getElementById('cartDropdownMenu');
+        if (menu) menu.innerHTML = dropdownHtml;
+    } catch (err) {
+        console.error('Failed to update cart info:', err);
+    }
+}
+
+async function addToCart(type, id) {
+    const quantity = parseInt(document.getElementById('quantity').value) || 1;
+    try {
+        const res = await fetch(`/cart/add/${type}/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ quantity })
+        });
+        if (res.ok) {
+            const data = await res.json();
+            if (data.success) {
+                await updateCartCountAndDropdown();
+                alert('Added to cart!');
+            } else {
+                alert('Failed to add to cart.');
             }
-        </script>
+        } else {
+            alert('Failed to add to cart.');
+        }
+    } catch (err) {
+        console.error('Error:', err);
+        alert('Failed to add to cart.');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateCartCountAndDropdown();
+});
+</script>
     </body>
     <style>
-        .add-to-cart-btn {
-        background: #3C2EFF;
-        color: #fff;
-        border: none;
-        border-radius: 6px;
-        padding: 12px 28px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        margin-top: 18px;
-        transition: background 0.2s;
-    }
-    .add-to-cart-btn:hover {
-        background: #2a22b8;
-    }
-    .quantity-selector {
-        display: flex;
-        align-items: center;
-        margin: 12px 0;
-    }
-    .quantity-btn {
-        background: #f2f2f2;
-        border: 1px solid #ccc;
-        color: #333;
-        font-size: 18px;
-        width: 32px;
-        height: 32px;
-        border-radius: 4px;
-        cursor: pointer;
-        margin: 0 6px;
-        transition: background 0.2s;
-    }
-    .quantity-btn:hover {
-        background: #e0e0e0;
-    }
-    .quantity-input {
-        width: 48px;
-        text-align: center;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        background: #fafafa;
-        margin: 0 4px;
-    }
+
     </style>
 </html>

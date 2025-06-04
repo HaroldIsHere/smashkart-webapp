@@ -18,10 +18,36 @@ class LinkController extends Controller
         return view('payment.cart');
     }
 
-
     public function cart()
     {
         return view('payment.cart');
+    }
+
+    public function count()
+    {
+        $cart = session('cart', []);
+        return response()->json(['count' => count($cart)]);
+    }
+
+    public function mini()
+    {
+        $cart = session('cart', []);
+        return view('mini-cart', compact('cart'))->render();
+    }
+
+        public function cartSummary()
+    {
+        $cart = session('cart', []);
+        $totalItems = 0;
+        $totalPrice = 0;
+        foreach ($cart as $item) {
+            $totalItems += $item['quantity'];
+            $totalPrice += $item['quantity'] * $item['price'];
+        }
+        return response()->json([
+            'totalItems' => $totalItems,
+            'totalPrice' => $totalPrice,
+        ]);
     }
 
     public function checkout()
@@ -151,14 +177,81 @@ class LinkController extends Controller
     }
 
     
-    public function dashboard()
+    public function dashboard(Request $request)
     {
         $bads = BadProduct::all();
         $bags = BagProduct::all();
         $shoes = ShoeProduct::all();
         $accessories = AccessoriesProduct::all();
         $apparels = ApparelProduct::all();
-        return view('admin.dashboard', compact('bads', 'bags', 'shoes', 'accessories', 'apparels'));
+        $month = $request->input('salesMonth', now()->format('Y-m'));
+        $start = \Carbon\Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+        $end = \Carbon\Carbon::createFromFormat('Y-m', $month)->endOfMonth();
+
+        $deliveredTransactions = \App\Models\Transaction::where('status', 'complete')
+            ->whereBetween('created_at', [$start, $end])
+            ->get();
+
+        // Group by day for the selected month
+        $salesPerDay = $deliveredTransactions->groupBy(function($item) {
+            return $item->created_at->format('Y-m-d');
+        })->map(function($group) {
+            return $group->sum('total');
+        });
+
+        // Prepare labels and data for the chart
+        $daysInMonth = [];
+        $salesData = [];
+        for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
+            $daysInMonth[] = $date->format('Y-m-d');
+            $salesData[] = $salesPerDay->get($date->format('Y-m-d'), 0);
+        }
+
+        // Total sales for the year (delivered only)
+        $totalSalesYear = \App\Models\Transaction::where('status', 'complete')
+            ->whereYear('created_at', now()->year)
+            ->sum('total');
+
+        // Orders per month for the year (all statuses)
+        $ordersPerMonthLabels = [];
+        $ordersPerMonthData = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $label = date('F', mktime(0, 0, 0, $m, 1));
+            $ordersPerMonthLabels[] = $label;
+            $ordersPerMonthData[] = \App\Models\Transaction::whereYear('created_at', now()->year)
+                ->whereMonth('created_at', $m)
+                ->count();
+        }
+
+        // Get sales per month for the current year (delivered only)
+        $salesPerMonthLabels = [];
+        $salesPerMonthData = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $label = date('F', mktime(0, 0, 0, $m, 1));
+            $salesPerMonthLabels[] = $label;
+            $salesPerMonthData[] = \App\Models\Transaction::where('status', 'complete')
+                ->whereYear('created_at', now()->year)
+                ->whereMonth('created_at', $m)
+                ->sum('total');
+        }
+
+        // Pending orders
+        $pendingOrders = \App\Models\Transaction::with('user')
+            ->where('status', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        $totalUsers = \App\Models\User::count();
+        $totalPendingOrders = \App\Models\Transaction::where('status', 'pending')->count();
+
+        return view('admin.dashboard', compact(
+            'bads', 'bags', 'shoes', 'accessories', 'apparels',
+            'totalSalesYear', 'ordersPerMonthLabels', 'ordersPerMonthData', 'pendingOrders',
+            'totalUsers', 'totalPendingOrders'
+        ))->with([
+            'salesPerMonthLabels' => $daysInMonth,
+            'salesPerMonthData' => $salesData,
+        ]);
     }
 
     public function users()
@@ -194,6 +287,52 @@ class LinkController extends Controller
     return view('payment.history', compact('transactions'));
     }
 
-    
+    public function updateStatus(Request $request, Transaction $transaction)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,on_the_way,complete',
+        ]);
+        $transaction->status = $request->input('status');
+        $transaction->save();
+
+        return back()->with('success', 'Order status updated!');
+    }
+
+    public function orderManagement()
+    {
+        $transactions = \App\Models\Transaction::with('user')->orderBy('created_at', 'desc')->get();
+        return view('admin.orderManagement', compact('transactions'));
+    }
+
+    public function reportInventory()
+    {
+        $bads = \App\Models\BadProduct::all();
+        $bags = \App\Models\BagProduct::all();
+        $shoes = \App\Models\ShoeProduct::all();
+        $accessories = \App\Models\AccessoriesProduct::all();
+        $apparels = \App\Models\ApparelProduct::all();
+
+        return view('admin.reportInventory', compact('bads', 'bags', 'shoes', 'accessories', 'apparels'));
+    }
+
+        public function updateQuantity(Request $request, $name)
+    {
+        $cart = session('cart', []);
+        foreach ($cart as &$item) {
+            if ($item['name'] === $name) {
+                $item['quantity'] = max(1, (int)$request->quantity);
+                $item['subtotal'] = $item['quantity'] * $item['price'];
+                break;
+            }
+        }
+        session(['cart' => $cart]);
+        // Return new subtotal for this item
+        foreach ($cart as $item) {
+            if ($item['name'] === $name) {
+                return response()->json(['subtotal' => $item['subtotal']]);
+            }
+        }
+        return response()->json(['subtotal' => 0]);
+    }
 
 }

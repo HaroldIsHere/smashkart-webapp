@@ -130,14 +130,14 @@
           <tr>
             <td style="padding:8px; border:1px solid #ddd;">{{ $item['name'] }}</td>
             <td style="padding:8px; border:1px solid #ddd;">{{ $item['quantity'] }}</td>
-            <td style="padding:8px; border:1px solid #ddd;">${{ number_format($item['price'], 2) }}</td>
-            <td style="padding:8px; border:1px solid #ddd;">${{ number_format($subtotal, 2) }}</td>
+            <td style="padding:8px; border:1px solid #ddd;">₱{{ number_format($item['price'], 2) }}</td>
+            <td style="padding:8px; border:1px solid #ddd;">₱{{ number_format($subtotal, 2) }}</td>
           </tr>
           @endforeach
           <tr>
             <td colspan="3"
               style="text-align:right; font-weight:bold; padding:8px; border:1px solid #ddd;">Total</td>
-            <td style="padding:8px; border:1px solid #ddd; font-weight:bold;">${{ number_format($total, 2) }}</td>
+            <td style="padding:8px; border:1px solid #ddd; font-weight:bold;">₱{{ number_format($total, 2) }}</td>
           </tr>
         </tbody>
       </table>

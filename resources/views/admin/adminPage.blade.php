@@ -6,13 +6,11 @@
         <ul>
             <li><a href="{{ url('admin/dashboard') }}">Dashboard</a></li>
             <li><a href="{{ url('admin/users') }}">Users</a></li>
-            <li><a href="{{ url('admin/settings') }}">Settings</a></li>
-            <li><a href="{{ url('admin/reports') }}">Reports</a></li>
-            <li><a href="{{ url('admin/adminPage') }}">Admin Page</a></li>
-            <li>
-                <form id="logout-form" action="{{ url('admin/logout') }}" method="POST" style="display:inline;">
+            <li><a href="{{ url('admin/report-inventory') }}">Reports</a></li>
+            <li><a href="{{ url('admin/orders') }}">Order Management</a></li>
+                <form id="logout-form" action="{{ url('admin/logout') }}" method="POST">
                     @csrf
-                    <button type="submit" style="background:none;border:none;color:#fff;padding:10px 20px;width:100%;text-align:left;cursor:pointer;">Logout</button>
+                    <button class="logout-button" type="submit">Logout</button>
                 </form>
             </li>
         </ul>
@@ -45,7 +43,7 @@ header {
 .admin-sidebar {
     width: 209px;
     background: #F2F2F2;
-    color: #222; /* Changed to dark text */
+    color: #222;
     padding: 20px 0;
 }
 .admin-sidebar ul {
@@ -53,17 +51,35 @@ header {
     padding: 0;
     font-weight: 500;
 }
+.logout-button {
+    width: 100%;
+    padding: 10px 20px;
+    color: #222;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    margin-top: 10px;
+    transition: background 0.2s;
+    font-size: 16px;
+    display: block;
+}
+
+.logout-button:hover {
+    background: #ddd; }
+
 .admin-sidebar li {
     margin: 20px 0;
 }
 .admin-sidebar a {
-    color: #222; /* Changed to dark text */
+    color: #222; 
     text-decoration: none;
     padding: 10px 20px;
     display: block;
 }
 .admin-sidebar a:hover {
-    background: #ddd; /* Adjusted for better contrast */
+    background: #ddd; 
 }
 .admin-content {
     flex: 1;

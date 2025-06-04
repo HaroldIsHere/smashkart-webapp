@@ -123,38 +123,38 @@
       $transactions = \App\Models\Transaction::where('user_id', Auth::id())->latest()->get();
     @endphp
     @if($transactions->count())
-      <table style="width:100%; border-collapse:collapse; background:#fff;">
+      <table>
         <thead>
-          <tr style="background:#f4f4f4;">
-            <th style="padding:8px; border:1px solid #ddd;">Date</th>
-            <th style="padding:8px; border:1px solid #ddd;">Products</th>
-            <th style="padding:8px; border:1px solid #ddd;">Total</th>
-            <th style="padding:8px; border:1px solid #ddd;">Status</th>
+          <tr>
+            <th>Date</th>
+            <th>Products</th>
+            <th>Total</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
           @foreach($transactions as $transaction)
             <tr>
-              <td style="padding:8px; border:1px solid #ddd;">{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
-              <td style="padding:8px; border:1px solid #ddd;">
-                <ul style="margin:0; padding-left:18px;">
+              <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
+                <td>
+                <ul>
                   @foreach(json_decode($transaction->cart, true) as $item)
-                    <li>{{ $item['name'] }} (x{{ $item['quantity'] }})</li>
+                  <li>{{ $item['name'] }} (x{{ $item['quantity'] }})</li>
                   @endforeach
                 </ul>
-              </td>
-              <td style="padding:8px; border:1px solid #ddd;">₱{{ number_format($transaction->total, 2) }}</td>
-              <td style="padding:8px; border:1px solid #ddd;">
+                </td>
+                <td>₱{{ number_format($transaction->total, 2) }}</td>
+                <td>
                 @if($transaction->status === 'complete')
-                    <span style="color:green;font-weight:bold;">Complete</span>
+                  <span style="color:green;font-weight:bold;">Delivered</span>
                 @elseif($transaction->status === 'on_the_way')
-                    <span style="color:#007bff;font-weight:bold;">On the Way</span>
+                  <span style="color:#007bff;font-weight:bold;">Shipped Out</span>
                 @else
-                    <span style="color:orange;font-weight:bold;">Pending</span>
+                  <span style="color:orange;font-weight:bold;">Pending</span>
                 @endif
-              </td>
-            </tr>
-          @endforeach
+                </td>
+              </tr>
+              @endforeach
         </tbody>
       </table>
     @else
@@ -163,6 +163,5 @@
       </div>
     @endif
   </div>
-
 </body>
 </html>
